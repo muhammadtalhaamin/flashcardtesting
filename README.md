@@ -23,7 +23,7 @@ An AI-powered application that creates customized flashcards based on any upload
 https://ai-flash-card-generator-mauve.vercel.app/
 
 ## Features
-- User-friendly access with social login or email/password authentication.
+- User-friendly access with gmail login or email/password authentication.
 - Generate flashcards by uploading text files.
 - Each flashcard contains AI-generated questions and answers for effective study.
 - Save, edit, and organize flashcards within custom folders.
@@ -48,12 +48,12 @@ https://ai-flash-card-generator-mauve.vercel.app/
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/muhammadtalhaamin/AI-Flash-card-generator.git
+    git clone https://github.com/0xmetaschool/FlashCardGPT.git
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd AI_Flashcard_Generator
+    cd FlashCardGPT 
     ```
 
 3. Install dependencies:
@@ -100,7 +100,7 @@ Open the browser and go to `http://localhost:3000`. Ensure that everything is lo
 
 We love contributions! Here's how you can help make the AI-powered FinanceGuru even better:
 
-1. Fork the project (`gh repo fork https://github.com/muhammadtalhaamin/AI-Flash-card-generator.git`)
+1. Fork the project (`gh repo fork https://github.com/0xmetaschool/FlashCardGPT.git`)
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
