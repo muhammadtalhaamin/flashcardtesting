@@ -13,12 +13,21 @@ function Header() {
     }, []);
 
     return (
-        <div className='flex p-4 items-center justify-between bg-secondary shadow-sm'>
+        <div className='flex p-4 items-center justify-between bg-gradient-to-br from-blue-50 to-white shadow-sm'>
             {/* Logo on the left */}
-            <span className='text-2xl font-bold'>FlashCardGPT</span>
+            <Link href="/" className="text-2xl font-bold">
+                FlashCardGPT
+            </Link>
 
             {/* Right-aligned header Menu items */}
             <ul className='flex gap-6 ml-auto'>
+                 <Link href={"/dashboard"}>
+                    <li className={`hover:text-black hover:font-bold transition-all
+                    cursor-pointer
+                    ${path == '/dashboard' && 'text-black font-bold'}
+                    `}
+                    >Get Started</li>
+                </Link>
                 <Link href={"/dashboard"}>
                     <li className={`hover:text-black hover:font-bold transition-all
                     cursor-pointer

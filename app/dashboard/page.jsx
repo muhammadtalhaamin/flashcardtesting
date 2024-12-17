@@ -1,18 +1,17 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Upload, FileText, Loader } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const FlashCard = ({ question, answer, index }) => {
+const FlashCard = React.memo(({ question, answer, index }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const handleClick = () => {
-    setIsFlipped(!isFlipped);
-  };
+  const handleClick = useCallback(() => {
+    setIsFlipped(prev => !prev);
+  }, []);
 
-  // Flash card section
   return (
     <div 
       className="relative h-48 w-full perspective-1000"
@@ -21,7 +20,6 @@ const FlashCard = ({ question, answer, index }) => {
       <div className={`relative w-full h-full duration-500 preserve-3d cursor-pointer ${
         isFlipped ? 'rotate-y-180' : ''
       }`}>
-        {/* Front of card */}
         <div className="absolute w-full h-full backface-hidden">
           <div className="p-6 rounded-lg border bg-card h-full flex flex-col justify-between">
             <div className="overflow-auto">
@@ -32,7 +30,6 @@ const FlashCard = ({ question, answer, index }) => {
           </div>
         </div>
         
-        {/* Back of card */}
         <div className="absolute w-full h-full backface-hidden rotate-y-180">
           <div className="p-6 rounded-lg border bg-card h-full flex flex-col justify-between">
             <div className="overflow-auto">
@@ -45,7 +42,9 @@ const FlashCard = ({ question, answer, index }) => {
       </div>
     </div>
   );
-};
+});
+
+FlashCard.displayName = 'FlashCard';
 
 export default function Dashboard() {
   const [file, setFile] = useState(null);
@@ -54,30 +53,48 @@ export default function Dashboard() {
   const [flashcards, setFlashcards] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFileChange = (event) => {
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+  const VALID_FILE_TYPES = [
+    'text/plain',
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/msword'
+  ];
+
+  const handleFileChange = useCallback((event) => {
     const selectedFile = event.target.files[0];
-    const validFileTypes = ['text/plain' ,
-      'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/msword'];
-
-    // Checking uploaded file type
-    if (selectedFile && validFileTypes.includes(selectedFile.type)) {
-      setFile(selectedFile);
-      setError('');
-    } else {
-      setError('Please upload a valid file type');
+    
+    if (!selectedFile) {
+      setError('No file selected');
       setFile(null);
+      return;
     }
-  };
 
-  const generateFlashcards = async () => {
+    if (!VALID_FILE_TYPES.includes(selectedFile.type)) {
+      setError('Invalid file type. Please upload TXT, PDF, DOC, or DOCX');
+      setFile(null);
+      return;
+    }
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError('File size exceeds 10 MB. Please upload a smaller document.');
+      setFile(null);
+      return;
+    }
+
+    setFile(selectedFile);
+    setError('');
+  }, []);
+
+  const generateFlashcards = useCallback(async () => {
     if (!file) {
       setError('Please upload a file first');
       return;
     }
 
     setLoading(true);
+    setError('');
+
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -93,41 +110,42 @@ export default function Dashboard() {
         throw new Error(data.error || 'Failed to generate flashcards');
       }
 
+      if (!data.flashcards?.length) {
+        setError('No flashcards could be generated. Please try a different document.');
+        setLoading(false);
+        return;
+      }
+
       setFlashcards(data.flashcards);
       setIsSubmitting(true);
 
       if (data.totalChunks > data.processedChunks) {
-        setError(`Note: Only processed ${data.processedChunks} of ${data.totalChunks} sections due to size limitations. Consider uploading a smaller document for better results.`);
+        setError(`Processed ${data.processedChunks} of ${data.totalChunks} sections`);
       }
     } catch (err) {
-      if (err.message.includes('Rate limit exceeded')) {
-        setError('Please wait a few minutes before trying again, or try with a smaller document.');
-      } else if (err.message.includes('too large')) {
-        setError('Document is too large. Please try with a smaller document (less than 10 pages recommended).');
-      } else {
-        setError('Failed to generate flashcards. Please try again.');
-      }
+      setError(err.message || 'Failed to generate flashcards. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [file]);
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
     setFile(null);
     setFlashcards([]);
     setError('');
     setIsSubmitting(false);
-  };
-   
-  // Upload file section
+  }, []);
+
   return (
-    <div className="flex flex-col items-center ">
-      <div className="container mx-auto">
-        <h1 className="text-3xl font-bold mb-2 mt-4">Study Dashboard</h1>
-        <h2 className="text-gray-500 mb-6 ">Generate flashcards from your documents</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-white py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-3">Study Dashboard</h1>
+          <p className="text-gray-600">Transform your documents into interactive flashcards</p>
+        </div>
         
         {!isSubmitting ? (
-          <div className="flex flex-col items-center justify-center pt-24">
+          <div className="flex flex-col items-center justify-center pt-12">
             <Card>
               <CardHeader>
                 <CardTitle>Upload Document</CardTitle>
@@ -198,7 +216,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {flashcards.map((card, index) => (
                   <FlashCard
-                    key={index}
+                    key={`card-${index}`}
                     question={card.question}
                     answer={card.answer}
                     index={index} 
@@ -209,21 +227,21 @@ export default function Dashboard() {
               <Card>
                 <CardContent className="py-4">
                   <div className="text-center text-gray-500">
-                    No flashcards generated yet
+                    No flashcards generated
                   </div>
                 </CardContent>
               </Card>
             )}
 
             <div className="flex justify-center mt-4 mb-4">    
-            <Button 
-              onClick={resetAll}
-              className="align-middle mt-4 mb-4 bg-black text-white"
-              variant="primary"
-            >
-              Submit Another Document
-            </Button>
-          </div>
+              <Button 
+                onClick={resetAll}
+                className="align-middle mt-4 mb-4 bg-black text-white"
+                variant="primary"
+              >
+                Submit Another Document
+              </Button>
+            </div>
           </div>
         )}
 

@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Check } from "lucide-react";
 
 import Header from "./dashboard/_components/Header";
 import Link from 'next/link';
-
+import FlashcardAnimation from "@/components/ui/FlashcardAnimation";
+import HeroSection from "@/components/HeroSection";
 
 const Feature = ({ title, text }) => (
   <div className="flex flex-col items-center space-y-3">
@@ -22,103 +27,193 @@ const PriceWrapper = ({ children, isRecommended = false }) => (
   </div>
 );
 
+const TrustedBy = () => {
+  const logos = [
+    "/berkeley-light.webp",
+    "/oxford-light.webp",
+    "/princeton-light.webp",
+    "/stanford-light.webp",
+    "/yale-light.webp"
+  ];
+
+  return (
+    <section className="bg-gray-50 py-16">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-12 text-black">Trusted by Top Students and Educators Worldwide</h2>
+        <div className="flex flex-wrap justify-center items-center gap-12 opacity-70 grayscale">
+          {logos.map((logo, index) => (
+            <img 
+              key={index} 
+              src={logo} 
+              alt={`Trusted Institution ${index + 1}`} 
+              className="h-16 w-auto hover:opacity-100 transition-opacity duration-300 ml-5"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const WhoCanBenefit = () => {
+  const beneficiaries = [
+    { title: "Students", description: "Efficiently study and retain complex information across subjects" },
+    { title: "Educators", description: "Create interactive learning materials and track student progress" },
+    { title: "Researchers", description: "Quickly digest and memorize key research findings" },
+    { title: "Professionals", description: "Learn and retain critical information for certifications and training" }
+  ];
+
+  return (
+    <section className="py-20">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-12 text-black">Who Can Benefit?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {beneficiaries.map((group, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <CardTitle className="text-xl">{group.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">{group.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const HowToGenerate = () => {
+  const steps = [
+    { title: "Upload Document", description: "Upload any document or text source" },
+    { title: "AI Analysis", description: "Our AI extracts key information and concepts" },
+    { title: "Generate Flashcards", description: "Instantly create interactive study materials" },
+    { title: "Customize & Study", description: "Refine and start learning immediately" }
+  ];
+
+  return (
+    <section className="bg-gray-50 py-20">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-12 text-black">How to Generate Flashcards</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {steps.map((step, index) => (
+            <Card key={index} className="border-2 border-gray-200 hover:border-black transition-colors duration-300">
+              <CardHeader className="items-center">
+                <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl mb-4 hover:shadow-lg transition-shadow duration-300">
+                  {index + 1}
+                </div>
+                <CardTitle>{step.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-gray-600">{step.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const UserReviews = () => {
+  const reviews = [
+    {
+      name: "Sarah Johnson",
+      role: "Medical Student",
+      text: "FlashCardGPT revolutionized my study routine. Creating flashcards is now a breeze!",
+      rating: 5
+    },
+    {
+      name: "Michael Chen",
+      role: "Software Engineer",
+      text: "Incredibly efficient tool for learning complex technical concepts quickly.",
+      rating: 5
+    },
+    {
+      name: "Emma Rodriguez",
+      role: "High School Teacher",
+      text: "A game-changer for creating engaging study materials for my students.",
+      rating: 5
+    },
+    {
+      name: "Sarah Johnson",
+      role: "Medical Student",
+      text: "FlashCardGPT revolutionized my study routine. Creating flashcards is now a breeze!",
+      rating: 5
+    },
+    {
+      name: "Michael Chen",
+      role: "Software Engineer",
+      text: "Incredibly efficient tool for learning complex technical concepts quickly.",
+      rating: 5
+    },
+    {
+      name: "Emma Rodriguez",
+      role: "High School Teacher",
+      text: "A game-changer for creating engaging study materials for my students.",
+      rating: 5
+    }
+  ];
+
+  return (
+    <section className="py-20">
+      <div className="container mx-auto text-center">
+        <h2 className="text-3xl font-bold mb-12 text-black">What Our Users Say</h2>
+        <Carousel className="w-full max-w-4xl mx-auto">
+          <CarouselContent>
+            {reviews.map((review, index) => (
+              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                <Card className="h-full">
+                  <CardContent className="flex flex-col items-center p-6 text-center h-full justify-between">
+                    <div className="mb-4">
+                      <p className="text-gray-600 italic mb-4">"{review.text}"</p>
+                      <div className="flex justify-center mb-4">
+                        {[...Array(review.rating)].map((_, i) => (
+                          <span key={i} className="text-yellow-500 text-2xl">★</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-bold">{review.name}</h3>
+                      <p className="text-gray-500">{review.role}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </div>
+    </section>
+  );
+};
+
 export default function Home() {
   return (
     <div className="relative flex flex-col justify-between min-h-screen overflow-hidden">
       <Header />
 
-      {/* Add spacing above the Hero Section */}
-      <div className="mt-32"></div>
+      <HeroSection/>
 
-      {/* Hero Section */}
-      <section className="flex flex-1 items-center justify-center z-50 py-16">
-        <div className="text-center max-w-screen-lg px-4">
-          <h1 className="mb-4 text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-gray-900 dark:text-white">
-            Upload a Document and Generate Flashcards Instantly
-          </h1>
-          
-          <p className="mb-8 text-lg md:text-xl text-gray-500 dark:text-gray-400">
-            Transform your study materials into an interactive learning experience with AI-powered flashcards.
-          </p>
-          <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-            <a href="/dashboard" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-white rounded-lg bg-black hover:bg-gray-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-              Get Started for Free
-            </a>
-          </div>
-          <div className="mt-8"></div>
-        </div>
-      </section>
+      {/* New Sections */}
+      <TrustedBy />
+      <WhoCanBenefit />
+      <HowToGenerate />
+      <UserReviews />
 
-      {/* Features Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="container mx-auto text-center">
-          <div className="space-y-10">
-            <h2 className="text-3xl font-bold text-black">Our Features</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              <Feature title="Upload Documents" text="Easily upload documents and extract key information." />
-              <Feature title="Generate Flashcards" text="Turn your content into interactive flashcards with AI-driven insights." />
-              <Feature title="Customize and Study" text="Customize, and study flashcards tailored to your learning." />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-20">
-        <div className="container mx-auto text-center">
-          <div className="space-y-12">
-            <h2 className="text-3xl font-bold text-black">Pricing Plans</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              <PriceWrapper>
-                <div className="space-y-2">
-                  <p className="text-2xl font-semibold text-black">Basic</p>
-                  <h3 className="text-3xl font-bold text-black">$0</h3>
-                  <p className="text-lg text-gray-500">per month</p>
-                  <div className="space-y-4 mt-4 text-left">
-                    <p className="text-gray-600">1 document upload</p>
-                    <p className="text-gray-600">Basic flashcards</p>
-                    <p className="text-gray-600">Only basic file formats are supported</p>
-                  </div>
-                </div>
-              </PriceWrapper>
-              <PriceWrapper isRecommended={true}>
-                <div className="space-y-2">
-                  <p className="text-2xl font-semibold text-black">Pro</p>
-                  <h3 className="text-3xl font-bold text-black">$9.99</h3>
-                  <p className="text-lg text-gray-500">per month</p>
-                  <div className="space-y-4 mt-4 text-left">
-                    <p className="text-gray-600">5 document uploads</p>
-                    <p className="text-gray-600">Advanced flashcard generation</p>
-                    <p className="text-gray-600">Upload multiple file formats</p>
-                  </div>
-                </div>
-              </PriceWrapper>
-              <PriceWrapper>
-                <div className="space-y-2">
-                  <p className="text-2xl font-semibold text-black">Enterprise</p>
-                  <h3 className="text-3xl font-bold text-black">Custom</h3>
-                  <p className="text-lg text-gray-500">per month</p>
-                  <div className="space-y-4 mt-4 text-left">
-                    <p className="text-gray-600">Unlimited document uploads</p>
-                    <p className="text-gray-600">Full custom flashcard solutions</p>
-                    <p className="text-gray-600">Unlimited file formats are supported</p>
-                  </div>
-                </div>
-              </PriceWrapper>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action */}
-      <section className="bg-gray-50 py-20 text-black">
+      <section className="bg-gray-600 py-20 text-white">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl mb-6 font-bold">Start Generating Flashcards Today!</h2>
-          <p className="text-xl mb-8 text-gray-600">Upload your documents and transform your study experience with AI-generated flashcards.</p>
+          <p className="text-xl mb-8 text-white">Upload your documents and transform your study experience with AI-generated flashcards.</p>
           <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-            <a href="/dashboard" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-white rounded-lg bg-black hover:bg-gray-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-              Get Started Now
-            </a>
+            <Button asChild>
+              <Link href="/dashboard">Get Started Now</Link>
+            </Button>
           </div>
         </div>
       </section>
