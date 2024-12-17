@@ -1,4 +1,4 @@
-// File: /Users/MAC/Desktop/testing/FlashCardGPT/app/dashboard/layout.jsx
+// File: /Users/MAC/Downloads/Metaschool/FlashCard/app/dashboard/layout.jsx
 import * as entry from '../../../../app/dashboard/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

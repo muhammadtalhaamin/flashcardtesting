@@ -1,4 +1,4 @@
-// File: /Users/MAC/Desktop/testing/FlashCardGPT/app/api/generate-flashcards/route.js
+// File: /Users/MAC/Downloads/Metaschool/FlashCard/app/api/generate-flashcards/route.js
 import * as entry from '../../../../../app/api/generate-flashcards/route.js'
 import type { NextRequest } from 'next/server.js'
 
